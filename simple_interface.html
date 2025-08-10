@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Safe URL Checker - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .url-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1.1em;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .check-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .demo-message {
+            background: #fff3cd;
+            color: #856404;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #ffeaa7;
+            text-align: center;
+        }
+
+        .demo-message h3 {
+            margin-bottom: 10px;
+            color: #856404;
+        }
+
+        .demo-message p {
+            margin-bottom: 15px;
+        }
+
+        .demo-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .demo-button:hover {
+            background: #5a6fd8;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .feature h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .feature p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .instructions {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .instructions h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .instructions ol {
+            color: #666;
+            line-height: 1.6;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 Safe URL Checker</h1>
+            <p>Comprehensive URL safety analysis tool</p>
+        </div>
+
+        <div class="main-content">
+            <div class="demo-message">
+                <h3>🌐 Web Interface Demo</h3>
+                <p>This is a demonstration of the Safe URL Checker interface. To use the full functionality with real URL checking, you need to run the web server.</p>
+                <a href="#" onclick="showInstructions()" class="demo-button">How to Use Full Version</a>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="demo-url">Enter URL to check (Demo Mode):</label>
+                    <input type="url" id="demo-url" class="url-input" 
+                           placeholder="https://example.com" 
+                           value="https://www.google.com">
+                </div>
+                <button class="check-button" onclick="demoCheck()">
+                    🔍 Check URL Safety (Demo)
+                </button>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🔍</div>
+                    <h3>URL Validation</h3>
+                    <p>Validates proper URL structure and format</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌐</div>
+                    <h3>DNS Check</h3>
+                    <p>Verifies domain resolution and accessibility</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📅</div>
+                    <h3>Domain Age</h3>
+                    <p>Checks domain registration history</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚠️</div>
+                    <h3>Pattern Detection</h3>
+                    <p>Identifies suspicious URL patterns</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🚫</div>
+                    <h3>Blacklist Check</h3>
+                    <p>Compares against known malicious domains</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>SSL Certificate</h3>
+                    <p>Validates HTTPS security certificates</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Redirect Analysis</h3>
+                    <p>Detects suspicious redirects</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Content Analysis</h3>
+                    <p>Analyzes website content for spam indicators</p>
+                </div>
+            </div>
+
+            <div class="instructions" id="instructions" style="display: none;">
+                <h3>🚀 How to Use the Full Version</h3>
+                <ol>
+                    <li><strong>Install Python:</strong> Make sure you have Python 3.7 or higher installed</li>
+                    <li><strong>Install Dependencies:</strong> Run <code>pip install -r requirements.txt</code></li>
+                    <li><strong>Start Web Server:</strong> Run <code>python web_interface.py</code> or double-click <code>start_web.bat</code></li>
+                    <li><strong>Open Browser:</strong> Go to <code>http://localhost:5000</code></li>
+                    <li><strong>Paste URL:</strong> Enter any URL in the input box and click "Check URL Safety"</li>
+                    <li><strong>View Results:</strong> See detailed safety analysis with color-coded results</li>
+                </ol>
+                <p style="margin-top: 15px; font-weight: 600; color: #333;">
+                    💡 The full version performs real-time analysis of URLs including DNS checks, domain age verification, SSL certificate validation, and content analysis!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showInstructions() {
+            const instructions = document.getElementById('instructions');
+            if (instructions.style.display === 'none') {
+                instructions.style.display = 'block';
+            } else {
+                instructions.style.display = 'none';
+            }
+        }
+
+        function demoCheck() {
+            const url = document.getElementById('demo-url').value.trim();
+            
+            if (!url) {
+                alert('Please enter a URL to check');
+                return;
+            }
+
+            // Demo results - in real version this would call the backend API
+            const demoResults = {
+                'https://www.google.com': {
+                    status: 'safe',
+                    percentage: 100,
+                    color: 'green',
+                    message: '✅ URL appears SAFE (8/8 checks passed)',
+                    checks: [
+                        { name: 'URL Format', status: 'safe', message: 'Valid URL format' },
+                        { name: 'DNS Resolution', status: 'safe', message: 'DNS resolves to: 216.58.203.4' },
+                        { name: 'Domain Age', status: 'safe', message: 'Domain is established (10191 days old)' },
+                        { name: 'Suspicious Patterns', status: 'safe', message: 'No suspicious patterns detected' },
+                        { name: 'Blacklist Check', status: 'safe', message: 'Domain not in blacklist' },
+                        { name: 'SSL Certificate', status: 'safe', message: 'Valid SSL certificate' },
+                        { name: 'Redirect Check', status: 'safe', message: 'No suspicious redirects' },
+                        { name: 'Content Analysis', status: 'safe', message: 'Low spam indicators' }
+                    ]
+                },
+                'https://malware.example.com': {
+                    status: 'unsafe',
+                    percentage: 25,
+                    color: 'red',
+                    message: '❌ URL appears UNSAFE (2/8 checks passed)',
+                    checks: [
+                        { name: 'URL Format', status: 'safe', message: 'Valid URL format' },
+                        { name: 'DNS Resolution', status: 'unsafe', message: 'DNS resolution failed' },
+                        { name: 'Domain Age', status: 'unsafe', message: 'Could not determine domain age' },
+                        { name: 'Suspicious Patterns', status: 'safe', message: 'No suspicious patterns detected' },
+                        { name: 'Blacklist Check', status: 'unsafe', message: 'Domain is blacklisted: malware.example.com' },
+                        { name: 'SSL Certificate', status: 'unsafe', message: 'Invalid SSL certificate' },
+                        { name: 'Redirect Check', status: 'unsafe', message: 'Suspicious redirect detected' },
+                        { name: 'Content Analysis', status: 'unsafe', message: 'High spam score (7): ad, free, win, excessive_links' }
+                    ]
+                }
+            };
+
+            const result = demoResults[url] || {
+                status: 'warning',
+                percentage: 75,
+                color: 'orange',
+                message: '⚠️ URL has some concerns (6/8 checks passed)',
+                checks: [
+                    { name: 'URL Format', status: 'safe', message: 'Valid URL format' },
+                    { name: 'DNS Resolution', status: 'safe', message: 'DNS resolves successfully' },
+                    { name: 'Domain Age', status: 'safe', message: 'Domain is relatively new (45 days old)' },
+                    { name: 'Suspicious Patterns', status: 'safe', message: 'No suspicious patterns detected' },
+                    { name: 'Blacklist Check', status: 'safe', message: 'Domain not in blacklist' },
+                    { name: 'SSL Certificate', status: 'safe', message: 'Valid SSL certificate' },
+                    { name: 'Redirect Check', status: 'unsafe', message: 'Suspicious redirect detected' },
+                    { name: 'Content Analysis', status: 'unsafe', message: 'Moderate spam indicators' }
+                ]
+            };
+
+            // Create results display with safety percentage
+            let html = `
+                <div style="margin-top: 30px; padding: 20px; background: ${result.status === 'safe' ? '#d4edda' : result.status === 'unsafe' ? '#f8d7da' : '#fff3cd'}; border-radius: 10px; color: ${result.status === 'safe' ? '#155724' : result.status === 'unsafe' ? '#721c24' : '#856404'}; text-align: center;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0; font-size: 1.2em; color: #333;">Safety Score</h3>
+                        <div style="font-size: 2em; font-weight: bold; font-family: 'Courier New', monospace; color: ${result.color};">${result.percentage}%</div>
+                    </div>
+                    <div style="width: 100%; height: 20px; background-color: #e9ecef; border-radius: 10px; overflow: hidden; margin-bottom: 15px;">
+                        <div style="width: ${result.percentage}%; height: 100%; background-color: ${result.color}; transition: width 0.5s ease-in-out; border-radius: 10px;"></div>
+                    </div>
+                    <div style="font-size: 1.1em; font-weight: 500;">${result.message}</div>
+                </div>
+            `;
+            
+            html += '<div style="margin-top: 20px;">';
+            result.checks.forEach(check => {
+                const statusColor = check.status === 'safe' ? '#28a745' : '#dc3545';
+                const statusIcon = check.status === 'safe' ? '✅' : '❌';
+                html += `
+                    <div style="background: #f8f9fa; border-radius: 10px; padding: 15px; margin-bottom: 10px; border-left: 4px solid ${statusColor};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <strong>${check.name}</strong>
+                            <span style="color: ${statusColor}; font-weight: 600;">${statusIcon} ${check.status.toUpperCase()}</span>
+                        </div>
+                        <div style="color: #666;">${check.message}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            html += '<div style="margin-top: 20px; padding: 15px; background: #e7f3ff; border-radius: 10px; color: #0056b3; text-align: center;">💡 This is a demo. For real URL checking, run the full web interface!</div>';
+
+            // Remove any existing results
+            const existingResults = document.querySelector('.results-display');
+            if (existingResults) {
+                existingResults.remove();
+            }
+
+            // Add results to page
+            const resultsDiv = document.createElement('div');
+            resultsDiv.className = 'results-display';
+            resultsDiv.innerHTML = html;
+            document.querySelector('.input-section').appendChild(resultsDiv);
+        }
+
+        // Auto-check on Enter key
+        document.getElementById('demo-url').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                demoCheck();
+            }
+        });
+    </script>
+</body>
+</html>

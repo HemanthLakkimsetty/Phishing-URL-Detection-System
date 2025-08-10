@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Safe URL Checker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .url-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1.1em;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .textarea-input {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1.1em;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .textarea-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .check-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .check-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .overall-result {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .overall-result.safe {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .overall-result.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .overall-result.unsafe {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .safety-score {
+            text-align: center;
+        }
+
+        .score-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .score-header h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .percentage-display {
+            font-size: 2em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: width 0.5s ease-in-out;
+            border-radius: 10px;
+        }
+
+        .score-message {
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .check-results {
+            display: grid;
+            gap: 15px;
+        }
+
+        .check-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #dee2e6;
+        }
+
+        .check-item.safe {
+            border-left-color: #28a745;
+            background: #f8fff9;
+        }
+
+        .check-item.unsafe {
+            border-left-color: #dc3545;
+            background: #fff8f8;
+        }
+
+        .check-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .check-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .check-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .check-status.safe {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .check-status.unsafe {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .check-message {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .batch-results {
+            margin-top: 20px;
+        }
+
+        .batch-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #dee2e6;
+        }
+
+        .batch-url {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .feature h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .feature p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 Safe URL Checker</h1>
+            <p>Comprehensive URL safety analysis tool</p>
+        </div>
+
+        <div class="main-content">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('single')">Single URL</button>
+                <button class="tab" onclick="switchTab('batch')">Multiple URLs</button>
+            </div>
+
+            <!-- Single URL Tab -->
+            <div id="single-tab" class="tab-content active">
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="single-url">Enter URL to check:</label>
+                        <input type="url" id="single-url" class="url-input" 
+                               placeholder="https://example.com" 
+                               onkeypress="handleEnter(event, checkSingleUrl)">
+                    </div>
+                    <button class="check-button" onclick="checkSingleUrl()">
+                        🔍 Check URL Safety
+                    </button>
+                </div>
+
+                <div class="loading" id="single-loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing URL safety...</p>
+                </div>
+
+                <div class="results-section" id="single-results"></div>
+            </div>
+
+            <!-- Batch URLs Tab -->
+            <div id="batch-tab" class="tab-content">
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="batch-urls">Enter multiple URLs (one per line):</label>
+                        <textarea id="batch-urls" class="textarea-input" 
+                                  placeholder="https://example1.com&#10;https://example2.com&#10;https://example3.com"></textarea>
+                    </div>
+                    <button class="check-button" onclick="checkBatchUrls()">
+                        🔍 Check All URLs
+                    </button>
+                </div>
+
+                <div class="loading" id="batch-loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing URLs...</p>
+                </div>
+
+                <div class="results-section" id="batch-results"></div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🔍</div>
+                    <h3>URL Validation</h3>
+                    <p>Validates proper URL structure and format</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌐</div>
+                    <h3>DNS Check</h3>
+                    <p>Verifies domain resolution and accessibility</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📅</div>
+                    <h3>Domain Age</h3>
+                    <p>Checks domain registration history</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚠️</div>
+                    <h3>Pattern Detection</h3>
+                    <p>Identifies suspicious URL patterns</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🚫</div>
+                    <h3>Blacklist Check</h3>
+                    <p>Compares against known malicious domains</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>SSL Certificate</h3>
+                    <p>Validates HTTPS security certificates</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Redirect Analysis</h3>
+                    <p>Detects suspicious redirects</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Content Analysis</h3>
+                    <p>Analyzes website content for spam indicators</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function handleEnter(event, callback) {
+            if (event.key === 'Enter') {
+                callback();
+            }
+        }
+
+        function showLoading(type) {
+            document.getElementById(type + '-loading').style.display = 'block';
+            document.getElementById(type + '-results').style.display = 'none';
+        }
+
+        function hideLoading(type) {
+            document.getElementById(type + '-loading').style.display = 'none';
+        }
+
+        function showResults(type, html) {
+            document.getElementById(type + '-results').innerHTML = html;
+            document.getElementById(type + '-results').style.display = 'block';
+        }
+
+        function formatCheckResult(checkName, result) {
+            const statusClass = result.safe ? 'safe' : 'unsafe';
+            const statusText = result.safe ? '✅ SAFE' : '❌ UNSAFE';
+            
+            return `
+                <div class="check-item ${statusClass}">
+                    <div class="check-header">
+                        <div class="check-name">${checkName}</div>
+                        <div class="check-status ${statusClass}">${statusText}</div>
+                    </div>
+                    <div class="check-message">${result.message}</div>
+                </div>
+            `;
+        }
+
+        async function checkSingleUrl() {
+            const url = document.getElementById('single-url').value.trim();
+            
+            if (!url) {
+                alert('Please enter a URL to check');
+                return;
+            }
+
+            showLoading('single');
+
+            try {
+                const response = await fetch('/check_url', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const results = data.results;
+                    let html = '';
+
+                    // Overall result with safety percentage
+                    if (results.overall) {
+                        const overall = results.overall;
+                        const percentage = overall.percentage || 0;
+                        const color = overall.color || 'gray';
+                        
+                        html += `
+                            <div class="overall-result ${overall.status}">
+                                <div class="safety-score">
+                                    <div class="score-header">
+                                        <h3>Safety Score</h3>
+                                        <div class="percentage-display" style="color: ${color}">
+                                            ${percentage}%
+                                        </div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${percentage}%; background-color: ${color}"></div>
+                                    </div>
+                                    <div class="score-message">${overall.message}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    // Individual check results
+                    html += '<div class="check-results">';
+                    
+                    const checkNames = {
+                        'format': 'URL Format',
+                        'dns': 'DNS Resolution',
+                        'age': 'Domain Age',
+                        'patterns': 'Suspicious Patterns',
+                        'blacklist': 'Blacklist Check',
+                        'ssl': 'SSL Certificate',
+                        'redirects': 'Redirect Check',
+                        'content': 'Content Analysis'
+                    };
+
+                    for (const [key, name] of Object.entries(checkNames)) {
+                        if (results[key]) {
+                            html += formatCheckResult(name, results[key]);
+                        }
+                    }
+
+                    html += '</div>';
+
+                    // Success message
+                    html += `<div class="success-message">✅ Results saved to: ${data.filename}</div>`;
+
+                    showResults('single', html);
+                } else {
+                    showResults('single', `<div class="error-message">❌ Error: ${data.error}</div>`);
+                }
+            } catch (error) {
+                showResults('single', `<div class="error-message">❌ Network error: ${error.message}</div>`);
+            }
+
+            hideLoading('single');
+        }
+
+        async function checkBatchUrls() {
+            const urlsText = document.getElementById('batch-urls').value.trim();
+            
+            if (!urlsText) {
+                alert('Please enter URLs to check');
+                return;
+            }
+
+            showLoading('batch');
+
+            try {
+                const response = await fetch('/check_multiple', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ urls: urlsText })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    let html = `<div class="success-message">✅ Checked ${data.total_urls} URLs. Results saved to: ${data.filename}</div>`;
+                    html += '<div class="batch-results">';
+
+                    data.results.forEach((item, index) => {
+                        html += '<div class="batch-item">';
+                        html += `<div class="batch-url">${index + 1}. ${item.url}</div>`;
+                        
+                        if (item.error) {
+                            html += `<div class="error-message">❌ Error: ${item.error}</div>`;
+                        } else if (item.results && item.results.overall) {
+                            const overall = item.results.overall;
+                            const percentage = overall.percentage || 0;
+                            const color = overall.color || 'gray';
+                            
+                            html += `
+                                <div class="overall-result ${overall.status}">
+                                    <div class="safety-score">
+                                        <div class="score-header">
+                                            <h3>Safety Score</h3>
+                                            <div class="percentage-display" style="color: ${color}">
+                                                ${percentage}%
+                                            </div>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: ${percentage}%; background-color: ${color}"></div>
+                                        </div>
+                                        <div class="score-message">${overall.message}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        html += '</div>';
+                    });
+
+                    html += '</div>';
+                    showResults('batch', html);
+                } else {
+                    showResults('batch', `<div class="error-message">❌ Error: ${data.error}</div>`);
+                }
+            } catch (error) {
+                showResults('batch', `<div class="error-message">❌ Network error: ${error.message}</div>`);
+            }
+
+            hideLoading('batch');
+        }
+    </script>
+</body>
+</html>
