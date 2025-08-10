@@ -254,4 +254,3 @@ Simply open `simple_interface.html` in your browser for a demo!
 
 ---
 
-**⚠️ Disclaimer**: This tool is for educational and security assessment purposes. Always use responsibly and in accordance with applicable laws and terms of service.
