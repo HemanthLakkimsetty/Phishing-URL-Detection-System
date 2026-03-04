@@ -81,10 +81,6 @@ Windows shortcut:
 run_checker.bat
 ```
 
-### 4. Optional demo page
-
-Open `simple_interface.html` directly in your browser.
-
 ## Output
 
 - Web mode saves results like: `url_check_YYYYMMDD_HHMMSS.json`
@@ -107,3 +103,4 @@ Open `simple_interface.html` directly in your browser.
 - This tool gives heuristic checks, not a guarantee.
 - Some safe sites may be flagged, and some risky sites may pass.
 - Use results as guidance, not final proof.
+
