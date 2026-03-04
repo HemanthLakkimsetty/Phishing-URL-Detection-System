@@ -9,9 +9,9 @@ It supports:
 
 ## Project Image
 
-![Project Preview](assets/Screenshot 2026-03-04 151021.png)
+![Project Preview](<assets/Screenshot 2026-03-04 151021.png>)
 
-You can replace `assets/project-preview.svg` with your own screenshot later (keep the same file name), or update the image path in this README.
+You can replace this screenshot anytime by updating the image path in this README.
 
 ## What This Project Checks
 
