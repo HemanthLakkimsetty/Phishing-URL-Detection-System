@@ -1,256 +1,109 @@
-# 🔒 Safe URL Checker
+# Phishing URL Detection System
 
-A comprehensive Python tool to check if URLs are safe, legal, and not spam. This tool performs multiple security checks to help you identify potentially malicious or suspicious URLs before accessing them.
+A Python tool to check if URLs are safe, legal, and not spam. This tool performs multiple security checks to help you identify potentially malicious or suspicious URLs before accessing them.
 
-## ✨ Features
+It supports:
+- Web interface (recommended)
+- Command line interface
+- Batch checking from a text file
 
-- **URL Format Validation** - Ensures proper URL structure
-- **DNS Resolution Check** - Verifies domain resolves to valid IP addresses
-- **Domain Age Verification** - Checks how long the domain has been registered
-- **Suspicious Pattern Detection** - Identifies known malicious URL patterns
-- **Blacklist Checking** - Compares against known malicious domains
-- **SSL Certificate Validation** - Ensures secure HTTPS connections
-- **Redirect Analysis** - Detects suspicious redirects to different domains
-- **Content Spam Detection** - Analyzes website content for spam indicators
-- **Results Export** - Saves detailed analysis to JSON files
-- **Multiple Input Modes** - Single URL, file-based, or interactive mode
+## What This Project Checks
 
-## 🚀 Installation
+- URL format validation
+- DNS/domain resolution
+- Domain age lookup
+- Suspicious URL patterns
+- Local blacklist match
+- SSL certificate check
+- Redirect behavior
+- Basic content spam indicators
 
-1. **Clone or download the project files**
-2. **Install Python dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Project Files
 
-## 📋 Requirements
+- `web_interface.py` - Flask web app
+- `main.py` - Command line runner
+- `url_checker.py` - Core detection logic
+- `templates/index.html` - Web UI page
+- `blacklist.json` - Local blacklist entries
+- `sample_urls.txt` - Example URLs for testing
+- `requirements.txt` - Python dependencies
 
-- Python 3.7 or higher
-- Internet connection for URL checking
-- Required packages (see `requirements.txt`):
-  - requests
-  - validators
-  - beautifulsoup4
-  - python-whois
-  - dnspython
-  - colorama
-  - tldextract
+## Requirements
 
-## 🎯 Usage
+- Python 3.7+
+- Internet connection (for DNS, whois, and content checks)
 
-### 🌐 Web Interface (Recommended)
+## Quick Start
+
+### 1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Run web app (easiest)
+
 ```bash
 python web_interface.py
 ```
-Then open your browser to `http://localhost:5000`
 
-**Or use the Windows launcher:**
-```bash
+Open: `http://localhost:5000`
+
+Windows shortcut:
+
+```bat
 start_web.bat
 ```
 
-### 📱 Demo Interface
-Open `simple_interface.html` in your browser for a demo version.
+### 3. Run command line mode
 
-### 💻 Command Line Interface
+Single URL:
 
-#### Single URL Check
 ```bash
 python main.py https://example.com
 ```
 
-#### Check Multiple URLs from File
-```bash
-python main.py --file urls.txt
-```
+Interactive mode:
 
-#### Interactive Mode
 ```bash
 python main.py --interactive
 ```
 
-#### Show Help
+Batch mode:
+
 ```bash
-python main.py --help
+python main.py --file sample_urls.txt
 ```
 
-#### Create Sample Files
-```bash
-python main.py --create-samples
+Windows shortcut:
+
+```bat
+run_checker.bat
 ```
 
-## 📁 File Structure
+### 4. Optional demo page
 
-```
-safe-url-checker/
-├── main.py                 # Command line application
-├── web_interface.py        # Web server (Flask)
-├── url_checker.py          # Core URL checking logic
-├── requirements.txt        # Python dependencies
-├── README.md              # This file
-├── QUICK_START.md         # Quick start guide
-├── run_checker.bat        # Windows CLI launcher
-├── start_web.bat          # Windows web launcher
-├── simple_interface.html  # Demo HTML interface
-├── templates/
-│   └── index.html         # Web interface template
-├── blacklist.json         # Blacklisted domains
-├── sample_urls.txt        # Sample URLs for testing
-└── url_check_*.json       # Analysis results (auto-generated)
-```
+Open `simple_interface.html` directly in your browser.
 
-## 🔍 Security Checks Explained
+## Output
 
-### 1. URL Format Validation
-- Validates proper URL structure
-- Ensures protocol (http/https) is present
-- Checks for valid characters and format
+- Web mode saves results like: `url_check_YYYYMMDD_HHMMSS.json`
+- Batch web mode saves results like: `batch_url_check_YYYYMMDD_HHMMSS.json`
+- CLI mode also saves JSON report files
 
-### 2. DNS Resolution
-- Resolves domain to IP addresses
-- Detects suspicious IP patterns (localhost, private IPs)
-- Ensures domain is accessible
+## Customize
 
-### 3. Domain Age
-- Checks domain registration date
-- Flags very new domains (< 30 days) as suspicious
-- Established domains (> 90 days) are considered safer
+- Edit `blacklist.json` to add/remove blocked domains
+- Edit `spam_indicators` in `url_checker.py` to adjust content checks
 
-### 4. Suspicious Patterns
-- Detects URL shorteners (bit.ly, tinyurl, etc.)
-- Identifies IP addresses in URLs
-- Finds very long random strings
+## Troubleshooting
 
-### 5. Blacklist Check
-- Compares against known malicious domains
-- Uses customizable blacklist file
-- Can be updated with new threats
+- `ModuleNotFoundError`: run `pip install -r requirements.txt`
+- Port already in use: stop old process or run app on a different port
+- Timeout/network errors: check your internet connection and retry
 
-### 6. SSL Certificate
-- Validates HTTPS certificates
-- Ensures secure connections
-- Flags HTTP-only sites as less secure
+## Notes
 
-### 7. Redirect Analysis
-- Checks for suspicious redirects
-- Detects cross-domain redirects
-- Identifies potential phishing attempts
-
-### 8. Content Analysis
-- Analyzes website content for spam indicators
-- Detects excessive advertising language
-- Identifies suspicious scripts and popups
-
-## 📊 Output Example
-
-```
-🔍 Analyzing URL: https://example.com
-------------------------------------------------------------
-URL Format          ✅ SAFE - Valid URL format
-DNS Resolution      ✅ SAFE - DNS resolves to: 93.184.216.34
-Domain Age          ✅ SAFE - Domain is established (8000+ days old)
-Suspicious Patterns ✅ SAFE - No suspicious patterns detected
-Blacklist Check     ✅ SAFE - Domain not in blacklist
-SSL Certificate     ✅ SAFE - Valid SSL certificate
-Redirect Check      ✅ SAFE - No suspicious redirects
-Content Analysis    ✅ SAFE - Low spam indicators
-------------------------------------------------------------
-✅ URL appears SAFE (8/8 checks passed)
-```
-
-## ⚙️ Configuration
-
-### Customizing Blacklist
-Edit `blacklist.json` to add or remove domains:
-```json
-[
-    "malware.example.com",
-    "phishing.example.com",
-    "scam.example.com"
-]
-```
-
-### Adjusting Spam Detection
-Modify the `spam_indicators` list in `url_checker.py` to customize spam detection keywords.
-
-## 🛡️ Safety Features
-
-- **Timeout Protection** - Prevents hanging on slow responses
-- **Error Handling** - Graceful handling of network issues
-- **User-Agent Spoofing** - Mimics real browser requests
-- **Rate Limiting** - Built-in delays to avoid overwhelming servers
-- **Safe Content Parsing** - Uses BeautifulSoup for safe HTML parsing
-
-## ⚠️ Limitations
-
-- **False Positives** - Some legitimate sites may be flagged
-- **Network Dependent** - Requires internet connection
-- **Not Real-time** - Results are based on current analysis
-- **Limited to Public APIs** - Uses publicly available information
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📝 License
-
-This project is open source and available under the MIT License.
-
-## ⚡ Quick Start
-
-### 🌐 Web Interface (Easiest)
-1. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Start web server:**
-   ```bash
-   python web_interface.py
-   ```
-
-3. **Open browser:**
-   Go to `http://localhost:5000`
-
-4. **Paste URL and check!**
-
-### 💻 Command Line
-1. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Test with a sample URL:**
-   ```bash
-   python main.py https://www.google.com
-   ```
-
-3. **Try interactive mode:**
-   ```bash
-   python main.py --interactive
-   ```
-
-### 📱 Demo Version
-Simply open `simple_interface.html` in your browser for a demo!
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-1. **ModuleNotFoundError**: Install missing dependencies with `pip install -r requirements.txt`
-2. **SSL Certificate Errors**: Some sites may have invalid certificates
-3. **Timeout Errors**: Network issues or slow servers
-4. **Permission Errors**: Ensure write permissions for result files
-
-### Getting Help
-
-- Check the help menu: `python main.py --help`
-- Review error messages for specific issues
-- Ensure all dependencies are installed correctly
-
----
-
+- This tool gives heuristic checks, not a guarantee.
+- Some safe sites may be flagged, and some risky sites may pass.
+- Use results as guidance, not final proof.
