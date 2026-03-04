@@ -1,11 +1,17 @@
 # Phishing URL Detection System
 
-A Python tool to check if URLs are safe, legal, and not spam. This tool performs multiple security checks to help you identify potentially malicious or suspicious URLs before accessing them.
+A simple Python project to check whether a URL looks safe or suspicious.
 
 It supports:
 - Web interface (recommended)
 - Command line interface
 - Batch checking from a text file
+
+## Project Image
+
+![Project Preview](assets/Screenshot 2026-03-04 151021.png)
+
+You can replace `assets/project-preview.svg` with your own screenshot later (keep the same file name), or update the image path in this README.
 
 ## What This Project Checks
 
@@ -81,6 +87,10 @@ Windows shortcut:
 run_checker.bat
 ```
 
+### 4. Optional demo page
+
+Open `simple_interface.html` directly in your browser.
+
 ## Output
 
 - Web mode saves results like: `url_check_YYYYMMDD_HHMMSS.json`
@@ -103,5 +113,3 @@ run_checker.bat
 - This tool gives heuristic checks, not a guarantee.
 - Some safe sites may be flagged, and some risky sites may pass.
 - Use results as guidance, not final proof.
-
-
